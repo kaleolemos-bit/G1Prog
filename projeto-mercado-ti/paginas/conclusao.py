@@ -7,7 +7,7 @@ def brl(v):  # escapa o $ para o Markdown não interpretar como fórmula LaTeX
     return _brl(v).replace("$", "\\$")
 
 dff = st.session_state["dff"]
-st.title("✅ Conclusão executiva")
+st.title("Conclusão executiva")
 if dff.empty:
     st.warning("Nenhum registro para os filtros selecionados.")
     st.stop()
@@ -78,7 +78,7 @@ st.markdown(
 5. **Perfis versáteis.** Todas as tecnologias aparecem em todos os cargos: combinar uma linguagem (Python/Java/JavaScript)
    com dados (SQL/Power BI) e nuvem (AWS) amplia a empregabilidade.
 
-> ⚠️ **Limitação:** a base é **simulada**, com distribuição quase uniforme entre categorias. As conclusões ilustram o
+> **Limitação:** a base é **simulada**, com distribuição quase uniforme entre categorias. As conclusões ilustram o
 > método analítico e não devem ser usadas como retrato fiel do mercado brasileiro.
     """
 )

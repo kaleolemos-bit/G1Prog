@@ -17,7 +17,6 @@ from utils.dados import MESES, ORDEM_REGIAO, ORDEM_SENIORIDADE, preparar_base
 
 st.set_page_config(
     page_title="Mercado de TI no Brasil",
-    page_icon="💼",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -63,10 +62,10 @@ def garantir_banco():
 # Barra lateral — fonte de dados + filtros globais
 # ---------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("## 💼 Mercado de TI")
+    st.markdown("## Mercado de TI")
     st.caption("Brasil · 2015–2024")
 
-    with st.expander("📂 Fonte de dados (upload opcional)"):
+    with st.expander("Fonte de dados (upload opcional)"):
         arquivo = st.file_uploader(
             "Envie um CSV com a mesma estrutura do dataset", type=["csv"],
             help="Se nenhum arquivo for enviado, o dashboard usa dados/simulacao_mercado_ti_brasil.csv",
@@ -109,7 +108,7 @@ with st.sidebar:
             st.session_state[k] = []
         st.session_state["f_ano"] = (int(min(anos)), int(max(anos)))
 
-    st.button("↺ Limpar filtros", on_click=_limpar, width="stretch")
+    st.button("Limpar filtros", on_click=_limpar, width="stretch")
 
 # Aplica os filtros (lista vazia = sem filtro)
 filtro = df["ano"].between(*faixa_anos)
@@ -139,16 +138,16 @@ with st.sidebar:
 paginas = st.navigation(
     {
         "Painel": [
-            st.Page("paginas/visao_geral.py", title="Visão geral", icon="📊", default=True),
-            st.Page("paginas/cargos_tecnologias.py", title="Cargos e tecnologias", icon="🧑‍💻"),
-            st.Page("paginas/regional.py", title="Análise regional", icon="🗺️"),
-            st.Page("paginas/salarios.py", title="Salários e correlação", icon="💰"),
+            st.Page("paginas/visao_geral.py", title="Visão geral", default=True),
+            st.Page("paginas/cargos_tecnologias.py", title="Cargos e tecnologias"),
+            st.Page("paginas/regional.py", title="Análise regional"),
+            st.Page("paginas/salarios.py", title="Salários e correlação"),
         ],
         "Dados": [
-            st.Page("paginas/explorar.py", title="Tabela dinâmica e SQL", icon="🗃️"),
+            st.Page("paginas/explorar.py", title="Tabela dinâmica e SQL"),
         ],
         "Resultado": [
-            st.Page("paginas/conclusao.py", title="Conclusão executiva", icon="✅"),
+            st.Page("paginas/conclusao.py", title="Conclusão executiva"),
         ],
     }
 )

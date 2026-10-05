@@ -13,7 +13,7 @@ st.markdown(
     "##### Dashboard analítico de vagas, salários, tecnologias e regiões · 2015 a 2024"
 )
 
-with st.expander("📌 Descrição do problema", expanded=True):
+with st.expander("Descrição do problema", expanded=True):
     st.markdown(
         """
 A transformação digital aumentou a procura por profissionais de **desenvolvimento de software,
@@ -92,7 +92,7 @@ if len(anual) >= 2:
     cv = mensal["quantidade_vagas"].std() / mensal["quantidade_vagas"].mean() * 100
     tendencia = ("crescimento" if cresc > 3 else "queda" if cresc < -3 else "estabilidade")
     st.markdown(
-        f"""<div class="bloco-insight"><b>🔎 Interpretação.</b>
+        f"""<div class="bloco-insight"><b>Interpretação.</b>
         Entre {int(ini['ano'])} e {int(fim['ano'])} o volume anual de vagas passou de
         {num(ini['vagas'])} para {num(fim['vagas'])} ({'+' if cresc>=0 else ''}{num(cresc, 1)}%), indicando <b>{tendencia}</b> do mercado no recorte.
         O mês de maior oferta foi {pico['data']:%m/%Y} ({num(pico['quantidade_vagas'])} vagas) e o de menor,

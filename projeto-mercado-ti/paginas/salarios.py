@@ -10,7 +10,7 @@ dff = st.session_state["dff"]
 ipca = st.session_state["ipca"]
 fonte = st.session_state["fonte_ipca"]
 
-st.title("💰 Salários, inflação e correlação")
+st.title("Salários, inflação e correlação")
 if dff.empty:
     st.warning("Nenhum registro para os filtros selecionados.")
     st.stop()
@@ -19,7 +19,7 @@ cfg = {"displayModeBar": False}
 
 
 def insight(texto: str):
-    st.markdown(f'<div class="bloco-insight"><b>🔎 Interpretação.</b> {texto}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="bloco-insight"><b>Interpretação.</b> {texto}</div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------- Evolução salarial nominal x real

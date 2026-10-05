@@ -7,7 +7,7 @@ from utils.dados import num
 dff = st.session_state["dff"]
 rel = st.session_state["relatorio"]
 
-st.title("🗃️ Tabela dinâmica, dados tratados e consultas SQL")
+st.title("Tabela dinâmica, dados tratados e consultas SQL")
 
 aba1, aba2, aba3 = st.tabs(["Tabela dinâmica", "Base tratada", "Banco SQLite (SQLAlchemy)"])
 
@@ -41,15 +41,15 @@ with aba1:
         estilo = (pivo.style.format(lambda v: num(v, casas))
                   .background_gradient(cmap="Blues", axis=None, subset=miolo))
         st.dataframe(estilo, height=min(38 * (len(pivo) + 1) + 3, 600))
-        st.download_button("⬇️ Baixar tabela dinâmica (CSV)", pivo.to_csv().encode("utf-8-sig"),
+        st.download_button("Baixar tabela dinâmica (CSV)", pivo.to_csv().encode("utf-8-sig"),
                            "tabela_dinamica.csv", "text/csv")
 
 with aba2:
     st.markdown(f"**{len(dff):,} registros após filtros**".replace(",", "."))
     st.dataframe(dff, height=420, hide_index=True)
-    st.download_button("⬇️ Baixar dados filtrados (CSV)", dff.to_csv(index=False).encode("utf-8-sig"),
+    st.download_button("Baixar dados filtrados (CSV)", dff.to_csv(index=False).encode("utf-8-sig"),
                        "mercado_ti_filtrado.csv", "text/csv")
-    with st.expander("🧹 Relatório de limpeza e preparação"):
+    with st.expander("Relatório de limpeza e preparação"):
         st.markdown(
             f"""
 - Linhas lidas do arquivo: **{rel['linhas_iniciais']}**
@@ -93,6 +93,6 @@ with aba3:
     st.dataframe(resumo_orm(), hide_index=True)
 
     if st.session_state.get("usando_upload"):
-        if st.button("💾 Gravar o CSV enviado no banco SQLite"):
+        if st.button("Gravar o CSV enviado no banco SQLite"):
             criar_banco(st.session_state["df"], st.session_state["ipca"])
             st.success("Banco recriado com os dados do arquivo enviado.")

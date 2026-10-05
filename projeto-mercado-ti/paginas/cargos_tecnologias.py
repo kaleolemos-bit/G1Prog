@@ -6,7 +6,7 @@ from utils.graficos import (CORES_CARGO, CORES_MODALIDADE, CORES_SENIORIDADE,
                             CORES_TEC, COR_DESTAQUE, COR_UNICA, estilizar)
 
 dff = st.session_state["dff"]
-st.title("🧑‍💻 Cargos, tecnologias, senioridade e modalidade")
+st.title("Cargos, tecnologias, senioridade e modalidade")
 if dff.empty:
     st.warning("Nenhum registro para os filtros selecionados.")
     st.stop()
@@ -15,7 +15,7 @@ cfg = {"displayModeBar": False}
 
 
 def insight(texto: str):
-    st.markdown(f'<div class="bloco-insight"><b>🔎 Interpretação.</b> {texto}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="bloco-insight"><b>Interpretação.</b> {texto}</div>', unsafe_allow_html=True)
 
 
 total = dff["quantidade_vagas"].sum()

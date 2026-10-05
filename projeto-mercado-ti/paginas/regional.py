@@ -7,7 +7,7 @@ from utils.dados import ESCALA_SEQUENCIAL, GEOJSON, ORDEM_REGIAO, brl, num
 from utils.graficos import CORES_REGIAO, estilizar
 
 dff = st.session_state["dff"]
-st.title("🗺️ Análise regional")
+st.title("Análise regional")
 if dff.empty:
     st.warning("Nenhum registro para os filtros selecionados.")
     st.stop()
@@ -114,7 +114,7 @@ sal_max = por_reg.sort_values("salario", ascending=False).iloc[0]
 sal_min = por_reg.sort_values("salario").iloc[0]
 amostra = "; ".join(f"{r.regiao}: {r.cidades} cidades" for r in por_reg.sort_values("cidades", ascending=False).itertuples())
 st.markdown(
-    f"""<div class="bloco-insight"><b>🔎 Interpretação.</b>
+    f"""<div class="bloco-insight"><b>Interpretação.</b>
     <b>{top['regiao']}</b> concentra o maior número absoluto de vagas ({num(top['participacao'], 1)}% do total).
     Porém, ao dividir pelo número de cidades monitoradas, a liderança passa a ser de <b>{top_norm['regiao']}</b>
     ({num(top_norm['vagas_por_cidade'])} vagas/cidade) e as diferenças entre regiões quase desaparecem —
