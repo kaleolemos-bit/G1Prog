@@ -11,7 +11,7 @@ regional das vagas, senioridade e modalidade de trabalho.
 | Plataforma | Link |
 |---|---|
 | Página do projeto (GitHub Pages) | https://kaleolemos-bit.github.io/G1Prog/projeto-mercado-ti/ |
-| Dashboard (Streamlit Community Cloud) | https://SEU-APP.streamlit.app |
+| Dashboard (Streamlit Community Cloud) | https://mercado-ti-kaleo.streamlit.app/ |
 | Notebook de análise | [`notebooks/analise_mercado_ti.ipynb`](notebooks/analise_mercado_ti.ipynb) |
 | Base de dados | [`dados/simulacao_mercado_ti_brasil.csv`](dados/simulacao_mercado_ti_brasil.csv) |
 
