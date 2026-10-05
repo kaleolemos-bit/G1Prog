@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mercado de TI no Brasil — Projeto de Análise de Dados</title>
+  <meta name="description" content="Análise e visualização do mercado de trabalho em Tecnologia da Informação no Brasil (2015–2024) com Python, Pandas, Plotly, SQLAlchemy e Streamlit.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tinta: #0b1f1e;
+      --texto: #1e293b;
+      --texto-suave: #475569;
+      --verde: #0f766e;
+      --verde-escuro: #134e4a;
+      --verde-claro: #ccfbf1;
+      --ambar: #f59e0b;
+      --ambar-claro: #fef3c7;
+      --fundo: #f6f8f7;
+      --cartao: #ffffff;
+      --borda: #e2e8f0;
+      --raio: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    h1, h2, h3 { font-family: "Space Grotesk", "Inter", sans-serif; line-height: 1.2; }
+    a { color: inherit; }
+
+    /* ---------- Cabeçalho ---------- */
+    header {
+      background:
+        radial-gradient(circle at 85% 20%, rgba(245, 158, 11, .22), transparent 40%),
+        linear-gradient(135deg, var(--tinta) 0%, var(--verde-escuro) 60%, var(--verde) 100%);
+      color: #fff;
+      padding: 56px 16px 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+    .topo { max-width: 1040px; margin: 0 auto; position: relative; z-index: 1; }
+    .selo {
+      display: inline-block; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+      padding: 4px 12px; border-radius: 999px; margin-bottom: 18px;
+    }
+    header h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); max-width: 760px; }
+    header h1 span { color: var(--ambar); }
+    header p.sub { margin-top: 14px; max-width: 680px; color: #d1fae5; font-size: 1.05rem; }
+    .acoes-topo { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* ---------- Botões ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 20px; border-radius: 10px; font-weight: 600; font-size: .95rem;
+      text-decoration: none; transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      border: 2px solid transparent;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-ambar { background: var(--ambar); color: var(--tinta); }
+    .btn-ambar:hover { box-shadow: 0 8px 20px rgba(245,158,11,.35); }
+    .btn-contorno { border-color: rgba(255,255,255,.6); color: #fff; }
+    .btn-contorno:hover { background: rgba(255,255,255,.1); }
+    .btn-verde { background: var(--verde); color: #fff; }
+    .btn-verde:hover { background: var(--verde-escuro); }
+    .btn-claro { background: var(--verde-claro); color: var(--verde-escuro); }
+    .btn-claro:hover { background: #99f6e4; }
+
+    /* ---------- Faixa de números ---------- */
+    .numeros {
+      max-width: 1040px; margin: -52px auto 0; padding: 0 16px; position: relative; z-index: 2;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    .numero {
+      background: var(--cartao); border-radius: var(--raio); padding: 18px 20px;
+      box-shadow: 0 10px 30px rgba(11, 31, 30, .08); border-top: 4px solid var(--ambar);
+    }
+    .numero strong { display: block; font-family: "Space Grotesk", sans-serif; font-size: 1.6rem; color: var(--tinta); }
+    .numero span { font-size: .85rem; color: var(--texto-suave); }
+
+    /* ---------- Conteúdo ---------- */
+    main { max-width: 1040px; margin: 0 auto; padding: 36px 16px 56px; display: grid; gap: 22px; }
+    section {
+      background: var(--cartao); border-radius: var(--raio); padding: 28px 30px;
+      border: 1px solid var(--borda);
+    }
+    main > section, .galeria > figure, .grade > .item { min-width: 0; }
+    section h2 {
+      font-size: 1.4rem; color: var(--verde-escuro); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    section h2::before {
+      content: ""; width: 10px; height: 22px; border-radius: 3px; background: var(--ambar); flex: none;
+    }
+    section p + p { margin-top: 10px; }
+    .suave { color: var(--texto-suave); }
+
+    .perguntas { list-style: none; counter-reset: q; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+    .perguntas li { counter-increment: q; padding-left: 38px; position: relative; }
+    .perguntas li::before {
+      content: counter(q); position: absolute; left: 0; top: 1px;
+      width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+      background: var(--verde-claro); color: var(--verde-escuro); font-weight: 700; font-size: .82rem;
+    }
+
+    .grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .grade-4 { grid-template-columns: repeat(4, 1fr); }
+    .item {
+      background: #f8fafc; border: 1px solid var(--borda); border-radius: 10px; padding: 14px 16px;
+      transition: border-color .15s ease;
+    }
+    .item:hover { border-color: var(--verde); }
+    .item h3 { font-size: 1rem; color: var(--tinta); margin-bottom: 4px; }
+    .item p { font-size: .9rem; color: var(--texto-suave); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag {
+      padding: 8px 14px; border-radius: 999px; background: #f0fdfa; border: 1px solid #99f6e4;
+      color: var(--verde-escuro); font-weight: 500; font-size: .92rem;
+    }
+    .tag small { color: var(--texto-suave); font-weight: 400; }
+
+    .galeria { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    figure { border: 1px solid var(--borda); border-radius: 10px; overflow: hidden; background: #fff; }
+    figure img { width: 100%; display: block; }
+    figure.larga { grid-column: 1 / -1; }
+    figcaption { padding: 10px 14px; font-size: .88rem; color: var(--texto-suave); border-top: 1px solid var(--borda); }
+    figcaption b { color: var(--tinta); }
+
+    .achados { list-style: none; display: grid; gap: 10px; }
+    .achados li {
+      background: var(--ambar-claro); border-left: 4px solid var(--ambar); border-radius: 8px;
+      padding: 10px 14px; color: #422006;
+    }
+
+    .botoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+
+    .destaque-dash {
+      background: linear-gradient(135deg, var(--verde-escuro), var(--verde)); color: #fff; border: none;
+    }
+    .destaque-dash h2 { color: #fff; }
+    .destaque-dash .suave { color: #ccfbf1; }
+
+    .estrutura {
+      background: var(--tinta); color: #d1fae5; border-radius: 10px; padding: 18px 20px;
+      font-family: "SFMono-Regular", Consolas, monospace; font-size: .86rem; overflow-x: auto; white-space: pre;
+    }
+
+    footer { background: var(--tinta); color: #a7f3d0; text-align: center; padding: 26px 16px; font-size: .9rem; }
+    footer a { color: var(--ambar); }
+
+    @media (max-width: 820px) {
+      .numeros { grid-template-columns: 1fr 1fr; }
+      .grade, .grade-4 { grid-template-columns: 1fr 1fr; }
+      .perguntas, .galeria { grid-template-columns: 1fr; }
+      section { padding: 22px 18px; }
+    }
+    @media (max-width: 480px) {
+      .grade, .grade-4 { grid-template-columns: 1fr; }
+      .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topo">
+    <span class="selo">Projeto G2 · Tema 25</span>
+    <h1>Mercado de Trabalho em <span>Tecnologia da Informação</span> no Brasil</h1>
+    <p class="sub">Análise e visualização de dados de vagas, salários, tecnologias e regiões entre 2015 e 2024,
+      com Python, Pandas, Plotly, SQLAlchemy e Streamlit.</p>
+    <div class="acoes-topo">
+      <a class="btn btn-ambar link-streamlit" href="#" target="_blank" rel="noopener">▶ Abrir dashboard</a>
+      <a class="btn btn-contorno link-repo" href="#" target="_blank" rel="noopener">Código no GitHub</a>
+    </div>
+  </div>
+</header>
+
+<div class="numeros">
+  <div class="numero"><strong>177.619</strong><span>vagas analisadas</span></div>
+  <div class="numero"><strong>4.440</strong><span>registros mensais</span></div>
+  <div class="numero"><strong>20 UFs</strong><span>5 regiões · 37 cidades</span></div>
+  <div class="numero"><strong>−37%</strong><span>poder de compra do salário (IPCA)</span></div>
+</div>
+
+<main>
+
+  <section id="sobre">
+    <h2>Sobre o projeto</h2>
+    <p>A transformação digital ampliou a procura por profissionais de desenvolvimento de software, ciência de dados,
+      computação em nuvem e infraestrutura. Este projeto investiga um conjunto de dados simulado do mercado de trabalho
+      em TI no Brasil para identificar <b>cargos mais demandados, tecnologias em alta, evolução salarial e distribuição
+      regional das vagas</b>.</p>
+    <p>O trabalho percorre um fluxo analítico completo: limpeza e preparação da base, engenharia de atributos,
+      integração com a API do Banco Central (IPCA), persistência em banco SQLite, análise exploratória, KPIs,
+      dashboard interativo e publicação na web.</p>
+  </section>
+
+  <section id="perguntas">
+    <h2>Perguntas de negócio</h2>
+    <ol class="perguntas">
+      <li>Quais cargos possuem maior demanda?</li>
+      <li>Quais tecnologias aparecem com maior frequência?</li>
+      <li>Houve crescimento salarial ao longo do tempo?</li>
+      <li>Existem diferenças regionais relevantes?</li>
+      <li>Quais áreas de TI possuem maior crescimento?</li>
+      <li>Qual nível de experiência é mais exigido?</li>
+      <li>Quais regiões concentram mais oportunidades?</li>
+    </ol>
+  </section>
+
+  <section id="kpis">
+    <h2>Indicadores analisados</h2>
+    <div class="grade">
+      <div class="item"><h3>Total de vagas</h3><p>Tamanho do mercado no recorte filtrado.</p></div>
+      <div class="item"><h3>Cargo mais demandado</h3><p>Ranking profissional por número de vagas.</p></div>
+      <div class="item"><h3>Tecnologia mais requisitada</h3><p>Tendência tecnológica do período.</p></div>
+      <div class="item"><h3>Salário médio nacional</h3><p>Média ponderada pela quantidade de vagas.</p></div>
+      <div class="item"><h3>Região com mais vagas</h3><p>Comparação regional absoluta e por cidade.</p></div>
+      <div class="item"><h3>Modalidade predominante</h3><p>Remoto, híbrido ou presencial.</p></div>
+    </div>
+  </section>
+
+  <section id="resultados">
+    <h2>Principais resultados</h2>
+    <div class="galeria">
+      <figure class="larga">
+        <img src="imagens/05_salario_real.png" alt="Gráfico de linhas comparando o salário médio nominal, estável em cerca de 10,5 mil reais, com o salário real, que cai de 16,6 mil para 10,4 mil reais entre 2015 e 2024" loading="lazy">
+        <figcaption><b>Salário nominal × real.</b> Corrigido pelo IPCA, o salário médio perdeu cerca de 37% do poder de compra.</figcaption>
+      </figure>
+      <figure>
+        <img src="imagens/02_cargos_areas.png" alt="Barras com vagas por cargo e crescimento de vagas por área de TI" loading="lazy">
+        <figcaption><b>Cargos e áreas.</b> Demanda equilibrada; Infraestrutura/Nuvem cresceu 21,5%.</figcaption>
+      </figure>
+      <figure>
+        <img src="imagens/04_heatmap_regional.png" alt="Mapa de calor de vagas por região e ano e barras de vagas por cidade" loading="lazy">
+        <figcaption><b>Regiões.</b> Sudeste lidera em volume; por cidade, as regiões se equivalem.</figcaption>
+      </figure>
+      <figure class="larga">
+        <img src="imagens/03_tecnologias.png" alt="Ranking de tecnologias e participação de cada tecnologia por ano" loading="lazy">
+        <figcaption><b>Tecnologias.</b> Java lidera no acumulado; AWS é a que mais ganhou espaço entre 2015 e 2024.</figcaption>
+      </figure>
+    </div>
+    <ul class="achados" style="margin-top:18px">
+      <li><b>Cientista de Dados</b> é o cargo mais demandado (21,0% das vagas), com pequena vantagem sobre os demais.</li>
+      <li>O <b>trabalho remoto</b> atingiu o pico em 2020 (40% das vagas) e segue como modalidade predominante.</li>
+      <li><b>Júnior</b> é o nível com mais vagas (34,1%) — há porta de entrada para iniciantes.</li>
+      <li>A correlação entre salário e quantidade de vagas é <b>desprezível</b> (r ≈ 0,02).</li>
+    </ul>
+  </section>
+
+  <section id="tecnologias">
+    <h2>Tecnologias utilizadas</h2>
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">NumPy</span>
+      <span class="tag">Matplotlib</span>
+      <span class="tag">Seaborn</span>
+      <span class="tag">Plotly <small>· mapas e gráficos interativos</small></span>
+      <span class="tag">Streamlit <small>· multipágina</small></span>
+      <span class="tag">SQLAlchemy</span>
+      <span class="tag">SQLite</span>
+      <span class="tag">Requests <small>· API Banco Central</small></span>
+      <span class="tag">Jupyter Notebook</span>
+      <span class="tag">GitHub Pages</span>
+    </div>
+  </section>
+
+  <section id="funcionalidades">
+    <h2>Funcionalidades do dashboard</h2>
+    <div class="grade grade-4">
+      <div class="item"><h3>Filtros múltiplos</h3><p>Ano, mês, região, UF, cargo, tecnologia, senioridade e modalidade.</p></div>
+      <div class="item"><h3>KPIs dinâmicos</h3><p>Recalculados a cada filtro.</p></div>
+      <div class="item"><h3>Mapa interativo</h3><p>Coroplético por estado com Plotly.</p></div>
+      <div class="item"><h3>Análise temporal</h3><p>Média móvel de 12 meses e variação anual.</p></div>
+      <div class="item"><h3>Consumo de API</h3><p>IPCA do Banco Central para salário real.</p></div>
+      <div class="item"><h3>Banco relacional</h3><p>SQLite + SQLAlchemy com tabela fato e dimensões.</p></div>
+      <div class="item"><h3>Correlação</h3><p>Pearson, Spearman e matriz de correlação.</p></div>
+      <div class="item"><h3>Upload de CSV</h3><p>Analise outra base com a mesma estrutura.</p></div>
+    </div>
+  </section>
+
+  <section id="arquivos">
+    <h2>Arquivos do projeto</h2>
+    <p class="suave">Acesse os principais componentes do projeto:</p>
+    <div class="botoes">
+      <a class="btn btn-verde link-readme" href="#" target="_blank" rel="noopener">📄 Ver README</a>
+      <a class="btn btn-verde link-notebook" href="#" target="_blank" rel="noopener">📓 Ver Notebook</a>
+      <a class="btn btn-claro" href="dados/simulacao_mercado_ti_brasil.csv" download>⬇ Baixar base de dados</a>
+      <a class="btn btn-claro link-app" href="#" target="_blank" rel="noopener">🐍 Ver app.py</a>
+    </div>
+    <p class="suave" style="margin-top:18px">Estrutura do repositório:</p>
+    <div class="estrutura">projeto-mercado-ti/
+├── app.py                  # dashboard Streamlit (entrada + filtros + navegação)
+├── paginas/                # páginas do dashboard multipágina
+├── utils/                  # tratamento de dados, API e banco (SQLAlchemy)
+├── requirements.txt
+├── README.md
+├── index.html              # esta página (GitHub Pages)
+├── dados/                  # CSV, IPCA de contingência e GeoJSON dos estados
+├── database/               # banco SQLite + script de criação
+├── notebooks/              # notebook de análise
+└── imagens/                # gráficos gerados no notebook</div>
+  </section>
+
+  <section id="dashboard" class="destaque-dash">
+    <h2>Dashboard interativo</h2>
+    <p class="suave">O dashboard principal foi desenvolvido com Streamlit e organizado em seis páginas: visão geral,
+      cargos e tecnologias, análise regional, salários e correlação, tabela dinâmica com consultas SQL e conclusão executiva.</p>
+    <div class="botoes">
+      <a class="btn btn-ambar link-streamlit" href="#" target="_blank" rel="noopener">▶ Acessar dashboard Streamlit</a>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <h2>Objetivo pedagógico</h2>
+    <p>Este projeto foi desenvolvido para a disciplina <b>Linguagem de Programação — Análise e Visualização de Dados
+      com Python</b>, demonstrando como transformar uma base de dados em um produto analítico completo, organizado
+      e publicado.</p>
+    <p>Mais importante do que gerar gráficos é compreender tendências, interpretar demandas profissionais e comunicar
+      resultados de forma clara para apoiar a tomada de decisão.</p>
+    <p class="suave" style="margin-top:12px"><b>Observação:</b> os dados são simulados; os resultados ilustram o método
+      analítico e não representam fielmente o mercado brasileiro.</p>
+  </section>
+
+</main>
+
+<footer>
+  Projeto desenvolvido para fins educacionais — Análise e Visualização de Dados com Python ·
+  <a class="link-repo" href="#" target="_blank" rel="noopener">Repositório</a>
+</footer>
+
+<script>
+  /* Links do projeto — troque o link do Streamlit depois de publicar o dashboard */
+  const links = {
+    "link-repo": "https://github.com/kaleolemos-bit/G1Prog/tree/main/projeto-mercado-ti",
+    "link-readme": "https://github.com/kaleolemos-bit/G1Prog/blob/main/projeto-mercado-ti/README.md",
+    "link-notebook": "https://github.com/kaleolemos-bit/G1Prog/blob/main/projeto-mercado-ti/notebooks/analise_mercado_ti.ipynb",
+    "link-app": "https://github.com/kaleolemos-bit/G1Prog/blob/main/projeto-mercado-ti/app.py",
+    "link-streamlit": "https://SEU-APP.streamlit.app",
+  };
+  Object.entries(links).forEach(([classe, url]) =>
+    document.querySelectorAll("." + classe).forEach(a => a.href = url));
+</script>
+</body>
+</html>
